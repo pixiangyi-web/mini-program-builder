@@ -1,0 +1,7 @@
+interface:
+  display_name: "Mini Program Builder"
+  short_description: "规划、设计并搭建可测试的小程序"
+  brand_color: "#4A3327"
+  default_prompt: "Use $mini-program-builder to plan and prepare a reusable WeChat mini program build checklist."
+policy:
+  allow_implicit_invocation: true

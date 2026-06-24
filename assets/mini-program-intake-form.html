@@ -1,0 +1,290 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>小程序项目信息填写表</title>
+  <style>
+    :root {
+      --bg: #efe8dc;
+      --card: #f8f4ec;
+      --ink: #17130f;
+      --muted: #5f574f;
+      --soft: #8a8074;
+      --line: #d8cdbd;
+      --brown: #4a3327;
+      --clay: #a35c3c;
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      background: var(--bg);
+      color: var(--ink);
+      font-family: -apple-system, BlinkMacSystemFont, "PingFang SC", "Noto Sans SC", sans-serif;
+    }
+    header {
+      position: sticky;
+      top: 0;
+      z-index: 5;
+      padding: 18px 20px;
+      background: rgba(248, 244, 236, 0.92);
+      border-bottom: 1px solid var(--line);
+      backdrop-filter: blur(14px);
+    }
+    .wrap { max-width: 1080px; margin: 0 auto; padding: 26px 20px 80px; }
+    h1, h2 {
+      margin: 0;
+      font-family: "Songti SC", "Noto Serif SC", serif;
+      font-weight: 500;
+    }
+    h1 { font-size: 30px; }
+    h2 { font-size: 24px; margin-bottom: 14px; }
+    p { color: var(--muted); line-height: 1.7; margin: 8px 0 0; }
+    .top {
+      max-width: 1080px;
+      margin: 0 auto;
+      display: flex;
+      gap: 16px;
+      align-items: center;
+      justify-content: space-between;
+    }
+    .actions { display: flex; gap: 10px; flex-wrap: wrap; }
+    button {
+      height: 42px;
+      padding: 0 18px;
+      border: 1px solid var(--brown);
+      background: var(--brown);
+      color: #fff;
+      font-size: 14px;
+      cursor: pointer;
+    }
+    button.secondary {
+      background: transparent;
+      color: var(--brown);
+      border-color: var(--line);
+    }
+    section {
+      margin-top: 22px;
+      padding: 24px;
+      background: var(--card);
+      border: 1px solid var(--line);
+      border-radius: 18px;
+      box-shadow: 0 10px 28px rgba(74, 51, 39, 0.08);
+    }
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 16px;
+    }
+    label {
+      display: grid;
+      gap: 8px;
+      color: var(--muted);
+      font-size: 14px;
+      font-weight: 700;
+    }
+    input, textarea, select {
+      width: 100%;
+      border: 1px solid var(--line);
+      background: #fffaf2;
+      color: var(--ink);
+      min-height: 44px;
+      padding: 10px 12px;
+      font: inherit;
+      border-radius: 6px;
+      outline: none;
+    }
+    textarea { min-height: 98px; resize: vertical; }
+    input:focus, textarea:focus, select:focus { border-color: var(--clay); }
+    .full { grid-column: 1 / -1; }
+    .hint { color: var(--soft); font-size: 13px; }
+    .required::after { content: " *"; color: var(--clay); }
+    @media (max-width: 720px) {
+      .top { align-items: flex-start; flex-direction: column; }
+      .grid { grid-template-columns: 1fr; }
+      header { position: static; }
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <div class="top">
+      <div>
+        <h1>小程序项目信息填写表</h1>
+        <p>不确定的地方填“待定”；希望先由 Codex 代填的地方填“先用示例”。</p>
+      </div>
+      <div class="actions">
+        <button type="button" onclick="downloadJSON()">导出 JSON</button>
+        <button type="button" onclick="downloadCSV()">导出 CSV</button>
+        <button type="button" class="secondary" onclick="clearForm()">清空</button>
+      </div>
+    </div>
+  </header>
+
+  <main class="wrap">
+    <form id="intake">
+      <section>
+        <h2>1. 基础信息</h2>
+        <div class="grid">
+          <label class="required">小程序名称<input name="小程序名称" /></label>
+          <label>品牌/项目名称<input name="品牌/项目名称" /></label>
+          <label>行业/业务类型<input name="行业/业务类型" placeholder="预约、报名、课程、零售、场馆等" /></label>
+          <label>核心转化动作<input name="核心转化动作" placeholder="立即预约、提交报名、添加微信等" /></label>
+          <label class="full">目标用户<textarea name="目标用户"></textarea></label>
+          <label class="full">核心目的<textarea name="核心目的" placeholder="展示、预约、下单、支付、会员、客服等"></textarea></label>
+          <label>品牌语/一句话定位<input name="品牌语/一句话定位" /></label>
+          <label>视觉关键词<input name="视觉关键词" placeholder="高级、自然、科技、亲子、专业等" /></label>
+          <label class="full">禁忌风格<textarea name="禁忌风格" placeholder="不想要的风格"></textarea></label>
+        </div>
+      </section>
+
+      <section>
+        <h2>2. 内容与素材</h2>
+        <div class="grid">
+          <label>Logo 文件/路径<input name="Logo" /></label>
+          <label>首页主图/视频<input name="首页主图/视频" /></label>
+          <label class="full">轮播图/图片素材<textarea name="轮播图/图片素材" placeholder="可填写文件名、路径或说明已上传哪些素材"></textarea></label>
+          <label class="full">首页简介文案<textarea name="首页简介文案"></textarea></label>
+          <label class="full">服务/商品/项目介绍<textarea name="服务/商品/项目介绍"></textarea></label>
+          <label class="full">团队/人员介绍<textarea name="团队/人员介绍"></textarea></label>
+          <label class="full">场地/门店/空间介绍<textarea name="场地/门店/空间介绍"></textarea></label>
+          <label>客服微信/电话<input name="客服微信/电话" /></label>
+          <label>地址/营业时间<input name="地址/营业时间" /></label>
+          <label class="full">注意事项/FAQ<textarea name="注意事项/FAQ"></textarea></label>
+        </div>
+      </section>
+
+      <section>
+        <h2>3. 页面需求</h2>
+        <div class="grid">
+          <label>首页<select name="首页"><option></option><option>需要</option><option>不需要</option></select></label>
+          <label>列表页<select name="列表页"><option></option><option>需要</option><option>不需要</option></select></label>
+          <label>详情页<select name="详情页"><option></option><option>需要</option><option>不需要</option></select></label>
+          <label>预约/下单页<select name="预约/下单页"><option></option><option>需要</option><option>不需要</option></select></label>
+          <label>订单页<select name="订单页"><option></option><option>需要</option><option>不需要</option></select></label>
+          <label>个人中心<select name="个人中心"><option></option><option>需要</option><option>不需要</option></select></label>
+          <label>客服/联系页<select name="客服/联系页"><option></option><option>需要</option><option>不需要</option></select></label>
+          <label>后台管理页<select name="后台管理页"><option></option><option>需要</option><option>不需要</option></select></label>
+          <label class="full">其他页面/页面说明<textarea name="其他页面/页面说明"></textarea></label>
+        </div>
+      </section>
+
+      <section>
+        <h2>4. 预约/下单规则</h2>
+        <div class="grid">
+          <label>是否需要预约<select name="是否需要预约"><option></option><option>是</option><option>否</option></select></label>
+          <label>预约类型<input name="预约类型" placeholder="单日、时段、多日、课程、套餐、定制" /></label>
+          <label>可预约日期<input name="可预约日期" /></label>
+          <label>时间段<input name="时间段" /></label>
+          <label>人数规则<input name="人数规则" /></label>
+          <label>价格规则<input name="价格规则" /></label>
+          <label>定金/支付规则<input name="定金/支付规则" /></label>
+          <label>取消/退款规则<input name="取消/退款规则" /></label>
+          <label>成功后下一步<input name="成功后下一步" placeholder="加微信、待确认、付款、查看订单" /></label>
+          <label>需要填写的信息<input name="需要填写的信息" placeholder="姓名、手机号、备注、人数等" /></label>
+        </div>
+      </section>
+
+      <section>
+        <h2>5. 库存/资源规则</h2>
+        <div class="grid">
+          <label>库存类型<input name="库存类型" placeholder="人数、房间、设备、员工、场地、商品" /></label>
+          <label>库存计算方式<input name="库存计算方式" placeholder="按天、按时段、按套餐、按资源" /></label>
+          <label>初始库存<input name="初始库存" /></label>
+          <label>库存扣减时机<input name="库存扣减时机" /></label>
+          <label>库存恢复规则<input name="库存恢复规则" /></label>
+          <label>是否显示余量<input name="是否显示余量" /></label>
+          <label class="full">特殊冲突规则<textarea name="特殊冲突规则"></textarea></label>
+        </div>
+      </section>
+
+      <section>
+        <h2>6. 后台管理</h2>
+        <div class="grid">
+          <label>管理员白名单<input name="管理员白名单" /></label>
+          <label>订单列表<input name="订单列表" placeholder="筛选、刷新、状态修改" /></label>
+          <label>库存总览<input name="库存总览" placeholder="按日期、时段、资源" /></label>
+          <label>内容维护<input name="内容维护" placeholder="首页文案、图片、客服信息" /></label>
+          <label>服务/商品维护<input name="服务/商品维护" /></label>
+          <label>图片上传<input name="图片上传" /></label>
+          <label>Excel 导出<input name="Excel 导出" /></label>
+          <label>操作日志<input name="操作日志" /></label>
+        </div>
+      </section>
+
+      <section>
+        <h2>7. 上线准备</h2>
+        <div class="grid">
+          <label>小程序主体<input name="小程序主体" placeholder="个人、个体工商户、企业" /></label>
+          <label>AppID<input name="AppID" /></label>
+          <label>是否需要微信支付<select name="是否需要微信支付"><option></option><option>需要</option><option>不需要</option><option>待定</option></select></label>
+          <label>云开发环境<input name="云开发环境" /></label>
+          <label>域名/服务器<input name="域名/服务器" /></label>
+          <label>服务类目<input name="服务类目" /></label>
+          <label>隐私政策<input name="隐私政策" /></label>
+          <label>用户协议<input name="用户协议" /></label>
+          <label>审核测试账号<input name="审核测试账号" /></label>
+          <label>上线时间目标<input name="上线时间目标" /></label>
+        </div>
+      </section>
+    </form>
+  </main>
+
+  <script>
+    const form = document.getElementById("intake");
+    const key = "mini-program-intake-form";
+
+    function values() {
+      return Array.from(new FormData(form).entries()).reduce((acc, [name, value]) => {
+        acc[name] = value.trim();
+        return acc;
+      }, {});
+    }
+
+    function save() {
+      localStorage.setItem(key, JSON.stringify(values()));
+    }
+
+    function restore() {
+      const raw = localStorage.getItem(key);
+      if (!raw) return;
+      const data = JSON.parse(raw);
+      Object.entries(data).forEach(([name, value]) => {
+        const field = form.elements[name];
+        if (field) field.value = value;
+      });
+    }
+
+    function download(name, text, type) {
+      const blob = new Blob([text], { type });
+      const a = document.createElement("a");
+      a.href = URL.createObjectURL(blob);
+      a.download = name;
+      a.click();
+      URL.revokeObjectURL(a.href);
+    }
+
+    function downloadJSON() {
+      save();
+      download("小程序项目信息表.json", JSON.stringify(values(), null, 2), "application/json;charset=utf-8");
+    }
+
+    function downloadCSV() {
+      save();
+      const rows = [["字段", "用户填写"]];
+      Object.entries(values()).forEach(([field, value]) => rows.push([field, value]));
+      const csv = rows.map((row) => row.map((cell) => `"${String(cell).replace(/"/g, '""')}"`).join(",")).join("\n");
+      download("小程序项目信息表.csv", "\ufeff" + csv, "text/csv;charset=utf-8");
+    }
+
+    function clearForm() {
+      if (!confirm("确定清空当前填写内容吗？")) return;
+      form.reset();
+      localStorage.removeItem(key);
+    }
+
+    form.addEventListener("input", save);
+    restore();
+  </script>
+</body>
+</html>
