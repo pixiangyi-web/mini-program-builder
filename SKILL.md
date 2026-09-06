@@ -253,7 +253,7 @@ When implementing, do not stop at planning unless the user only asks for a plan.
 
 ## Recurrent WeChat Mini-Program Failure Points
 
-Use this checklist before declaring a mini-program ready for release. These issues repeatedly caused misleading previews, broken interactions, or duplicated work in a production bar-ranking mini-program.
+Use this checklist before declaring any mini-program ready for release. These issues commonly cause misleading previews, broken interactions, or duplicated work across content, commerce, booking, and utility apps.
 
 ### Project and release consistency
 
@@ -276,11 +276,11 @@ Use this checklist before declaring a mini-program ready for release. These issu
 - Configure the HTTPS request legal domain before testing the experience build. A browser request working on the website does not prove `wx.request` will work in the mini-program.
 - When user-generated content is public, define the visibility rule explicitly, for example `pending`, `reviewing`, and `accepted`, and filter records server-side rather than trusting the client.
 
-### Data identity and unranked items
+### Data identity and dynamic records
 
-- Do not use a ranking number as the only identity for a bar. Rankings can change, and recommended bars may have no rank at all. Use a stable bar name or ID for cloud feedback, local rated state, and navigation.
-- When a page supports both ranked and unranked bars, pass and decode the bar name, area, and type explicitly. Never fall back silently to the first ranked bar.
-- Filter recommended items against the canonical catalog before showing an “unranked” section, using a case-insensitive comparison and trimmed names.
+- Do not use a display position, array index, or other changeable value as the only identity for a record. Use a stable ID for cloud data, local state, updates, and navigation.
+- When a page supports both complete and incomplete records, pass and decode the record identity and display metadata explicitly. Never fall back silently to the first item.
+- Filter remote records against the canonical catalog when the UI contains multiple sources, and define how duplicates, stale records, and unpublished records are handled.
 
 ### Interaction and animation debugging
 
