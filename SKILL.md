@@ -250,3 +250,56 @@ Use practical Chinese by default when the user is Chinese. Keep outputs actionab
 - “上线前必须确认”
 
 When implementing, do not stop at planning unless the user only asks for a plan. Build, test, and report the artifact path.
+
+## Recurrent WeChat Mini-Program Failure Points
+
+Use this checklist before declaring a mini-program ready for release. These issues repeatedly caused misleading previews, broken interactions, or duplicated work in a production bar-ranking mini-program.
+
+### Project and release consistency
+
+- Confirm the AppID in `project.config.json`, the AppID selected in DevTools, and the account used for the experience build are the same. A changed AppID can make an apparently correct local build behave like an old or different project.
+- Treat the source repository and the DevTools working copy as separate deliverables. After every source change, copy the changed files into the configured `miniprogramRoot` and compare them before testing.
+- Verify the actual uploaded or previewed build, rather than assuming a Git commit or a local editor change is what DevTools is running.
+
+### Fonts and platform rendering
+
+- Do not assume web `@font-face` loading works in a mini-program. Test on a real device and in the experience build, not only in a browser or simulator.
+- For third-party fonts, use `wx.loadFontFace` with an HTTPS URL, add the font host to the download or request allowlist as required, and provide a system fallback such as `SimSun`, `"宋体"`, Georgia, or a platform serif font.
+- Check that the remote font response has the correct content type, is reachable without authentication, and supports cross-origin loading where needed. Keep a fallback because font loading can be asynchronous or unavailable offline.
+- After a font change, clear DevTools cache and rebuild. Otherwise the preview can show the old font and make a successful fix look ineffective.
+
+### API, cloud data, and allowlists
+
+- Every public API used by the mini-program needs a real `GET` or `POST` route that matches the client. A submit-only endpoint cannot populate a public list.
+- Test the deployed endpoint directly and inspect its status code and JSON shape. Test both an empty result and at least one real record.
+- Keep database migrations applied to the remote environment. Local schema success does not prove the production D1 or cloud database has the same columns.
+- Configure the HTTPS request legal domain before testing the experience build. A browser request working on the website does not prove `wx.request` will work in the mini-program.
+- When user-generated content is public, define the visibility rule explicitly, for example `pending`, `reviewing`, and `accepted`, and filter records server-side rather than trusting the client.
+
+### Data identity and unranked items
+
+- Do not use a ranking number as the only identity for a bar. Rankings can change, and recommended bars may have no rank at all. Use a stable bar name or ID for cloud feedback, local rated state, and navigation.
+- When a page supports both ranked and unranked bars, pass and decode the bar name, area, and type explicitly. Never fall back silently to the first ranked bar.
+- Filter recommended items against the canonical catalog before showing an “unranked” section, using a case-insensitive comparison and trimmed names.
+
+### Interaction and animation debugging
+
+- For stacked cards, separate the visual layer from the data reorder. Keep every card mounted throughout the animation; update the array only after the transition finishes, or the next card can flash, disappear, or appear as a background gap.
+- Set `z-index` and clipping deliberately for the moving card. A card that is meant to travel behind the stack must remain behind the stack for the entire motion, including the final frame.
+- Use one shared transition duration and easing for the outgoing and incoming cards. Different timings create the visible “pause then teleport” effect.
+- Keep controls outside the animated stack in normal document flow. Absolute or fixed buttons will overlap cards when card count or expanded height changes.
+- Check tap hit areas and event propagation when an action button sits inside an expandable card. A rating tap must not also trigger the card collapse handler.
+- Use screenshots or device recordings at the start, middle, and end of the animation. Inspect the intermediate frames, not only the final layout.
+
+### UI consistency and device adaptation
+
+- Use one shared style token for repeated labels, chips, buttons, and scores. Explicitly set font size, weight, line height, border radius, padding, and overflow so text cannot inherit inconsistent values.
+- Test long Chinese and English names, mixed punctuation, and narrow Huawei and iPhone viewports. Use `min-width: 0`, wrapping, and bounded flex children where text competes with scores or buttons.
+- Reserve the status-bar and navigation safe areas. Modal headers, close buttons, skip buttons, and mini-program system controls must not overlap on devices with different status-bar heights.
+- For expandable panels and rating sheets, constrain the panel with `max-height`, keep the title and close control in a sticky header, and leave bottom safe-area space so the final options and submit button remain reachable.
+
+### Final release pass
+
+- Test the first launch, cold launch after cache clearing, experience build, and at least one real device.
+- Exercise every write path: rating, tags, nomination, wanted, and visited. Confirm success state, failure state, cloud persistence, and page refresh state.
+- Run code analysis, JavaScript syntax checks, `git diff --check`, and a final DevTools compile. Verify the deployed website/API and the mini-program copy separately.
