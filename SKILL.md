@@ -301,5 +301,5 @@ Use this checklist before declaring any mini-program ready for release. These is
 ### Final release pass
 
 - Test the first launch, cold launch after cache clearing, experience build, and at least one real device.
-- Exercise every write path: rating, tags, nomination, wanted, and visited. Confirm success state, failure state, cloud persistence, and page refresh state.
+- Exercise every write path: create, edit, delete, upload, submit, and any local preference or status change. Confirm success state, failure state, cloud persistence, and page refresh state.
 - Run code analysis, JavaScript syntax checks, `git diff --check`, and a final DevTools compile. Verify the deployed website/API and the mini-program copy separately.
